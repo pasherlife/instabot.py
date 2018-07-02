@@ -280,22 +280,22 @@ class InstaBot:
         })
 
        
-        response = self.s.get(https://www.instagram.com/)
-if response.status_code == 404:
-return
-resp = response.text
-if resp is not None and '_sharedData' in resp:
-try:
-shared_data = json.loads(resp.split("window._sharedData = ")[1].split(";</script>")[0])
-except (TypeError, KeyError, IndexError):
-pass
-self.csrftoken = shared_data['config']['csrf_token']
-        time.sleep(5 * random.random())
-        login = self.s.post(
-            self.url_login, data=self.login_post, allow_redirects=True)
-        self.s.headers.update({'X-CSRFToken': login.cookies['csrftoken']})
-        self.csrftoken = login.cookies['csrftoken']
-        #ig_vw=1536; ig_pr=1.25; ig_vh=772;  ig_or=landscape-primary;
+       r = self.s.get(self.url)
+subs1 = r.text[r.text.find("csrf_token")+13:]
+subs2 = subs1[:subs1.find('\"')]
+self.s.headers.update({'X-CSRFToken': subs2})
+time.sleep(5 * random.random())
+login = self.s.post(
+    self.url_login, data=self.login_post, allow_redirects=True)
+
+
+r = self.s.get(self.url)
+subs1 = r.text[r.text.find("csrf_token")+13:]
+subs2 = subs1[:subs1.find('\"')]
+self.s.headers.update({'X-CSRFToken': subs2})
+self.csrftoken = subs2
+#ig_vw=1536; ig_pr=1.25; ig_vh=772;  ig_or=landscape-primary;
+self.s.cookies['csrftoken'] = subs2
         self.s.cookies['ig_vw'] = '1536'
         self.s.cookies['ig_pr'] = '1.25'
         self.s.cookies['ig_vh'] = '772'
