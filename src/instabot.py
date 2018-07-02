@@ -279,8 +279,17 @@ class InstaBot:
             'X-Requested-With': 'XMLHttpRequest'
         })
 
-        r = self.s.get(self.url)
-        self.s.headers.update({'X-CSRFToken': r.cookies['csrftoken']})
+       
+        response = self.s.get(https://www.instagram.com/)
+if response.status_code == 404:
+return
+resp = response.text
+if resp is not None and '_sharedData' in resp:
+try:
+shared_data = json.loads(resp.split("window._sharedData = ")[1].split(";</script>")[0])
+except (TypeError, KeyError, IndexError):
+pass
+self.csrftoken = shared_data['config']['csrf_token']
         time.sleep(5 * random.random())
         login = self.s.post(
             self.url_login, data=self.login_post, allow_redirects=True)
